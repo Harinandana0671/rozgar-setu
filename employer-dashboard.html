@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard - Rozgar Setu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <button onclick="history.back()" class="back-btn">←</button>
+        <h1>Employer Dashboard</h1>
+    </header>
+
+    <main class="main-content">
+        <!-- Employer Profile Summary -->
+        <div class="profile-summary-card">
+            <div class="profile-avatar-large">🏢</div>
+            <div class="profile-info">
+                <h2 id="companyName">Company Name</h2>
+                <p id="companyType">Construction / Hiring</p>
+                <p id="companyLocation">📍 Delhi</p>
+            </div>
+            <button class="edit-profile-btn" onclick="editCompanyProfile()">Edit</button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; background: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">
+            <div class="stat-card" style="text-align: center; padding: 15px; background: white; border-radius: 8px;">
+                <div style="font-size: 24px; font-weight: bold; color: #007bff;" id="totalJobs">0</div>
+                <div style="font-size: 12px; color: #666;">Jobs Posted</div>
+            </div>
+            <div class="stat-card" style="text-align: center; padding: 15px; background: white; border-radius: 8px;">
+                <div style="font-size: 24px; font-weight: bold; color: #28a745;" id="totalApplications">0</div>
+                <div style="font-size: 12px; color: #666;">Applications</div>
+            </div>
+        </div>
+
+        <!-- Search Workers Section -->
+        <div class="section">
+            <h3>Search Workers</h3>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="workerSearchInput" placeholder="Search worker by skill, location..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                <button onclick="searchWorkers()" style="padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Search</button>
+            </div>
+            <div id="workerSearchResults" style="display: none;">
+                <!-- Worker search results will be displayed here -->
+            </div>
+        </div>
+
+        <!-- My Posted Jobs -->
+        <div class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3>My Posted Jobs</h3>
+                <button class="primary-btn" onclick="window.location.href='post.html'" style="padding: 8px 15px; font-size: 14px;">+ Post New Job</button>
+            </div>
+            <div id="postedJobsList" class="jobs-list">
+                <!-- Posted jobs will be listed here -->
+            </div>
+            <div id="noJobsMessage" style="text-align: center; padding: 30px; color: #999; display: none;">
+                <p>No jobs posted yet</p>
+                <button class="primary-btn" onclick="window.location.href='post.html'" style="margin-top: 15px;">Post Your First Job</button>
+            </div>
+        </div>
+
+        <!-- Job Applications -->
+        <div class="section">
+            <h3>Recent Applications</h3>
+            <div id="applicationsList" class="jobs-list">
+                <!-- Applications will be listed here -->
+            </div>
+            <div id="noApplicationsMessage" style="text-align: center; padding: 30px; color: #999; display: none;">
+                <p>No applications yet</p>
+                <p style="font-size: 12px;">Applications from workers will appear here</p>
+            </div>
+        </div>
+
+        <!-- Saved Workers -->
+        <div class="section">
+            <h3>Shortlisted Workers</h3>
+            <div id="savedWorkersList" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <!-- Saved workers will be displayed here -->
+            </div>
+            <div id="noSavedWorkersMessage" style="text-align: center; padding: 30px; color: #999; display: none;">
+                <p>No shortlisted workers yet</p>
+                <p style="font-size: 12px;">Workers you save will appear here</p>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="section">
+            <button class="primary-btn" onclick="window.location.href='post.html'" style="width: 100%; margin-bottom: 10px;">Post a Job</button>
+            <button class="secondary-btn" onclick="browseCandidates()" style="width: 100%; margin-bottom: 10px;">Browse All Candidates</button>
+            <button class="secondary-btn" onclick="viewJobAnalytics()" style="width: 100%; margin-bottom: 10px;">Job Analytics</button>
+            <button class="secondary-btn danger-btn" onclick="logout()" style="width: 100%;">Sign Out</button>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="search-results.html" class="nav-item">
+            <span class="nav-icon">🔍</span>
+            <span>Search</span>
+        </a>
+        <a href="add-profile.html" class="nav-item">
+            <span class="nav-icon">➕</span>
+            <span>Add Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span>Post Job</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script src="main.js"></script>
+    <script>
+        var allWorkers = [];
+        var allJobs = [];
+        var savedWorkers = [];
+
+        // Load data on page load
+        function loadDashboardData() {
+            allWorkers = JSON.parse(localStorage.getItem('workerProfiles') || '[]');
+            allJobs = JSON.parse(localStorage.getItem('jobPosts') || '[]');
+            savedWorkers = JSON.parse(localStorage.getItem('employerSavedWorkers') || '[]');
+
+            // Update stats
+            document.getElementById('totalJobs').textContent = allJobs.length;
+            document.getElementById('totalApplications').textContent = Math.floor(Math.random() * 10); // Placeholder
+
+            // Display posted jobs
+            displayPostedJobs();
+            displaySavedWorkers();
+            displayApplications();
+        }
+
+        // Display posted jobs
+        function displayPostedJobs() {
+            var jobsList = document.getElementById('postedJobsList');
+            var noJobsMsg = document.getElementById('noJobsMessage');
+
+            if (allJobs.length === 0) {
+                jobsList.style.display = 'none';
+                noJobsMsg.style.display = 'block';
+                return;
+            }
+
+            jobsList.style.display = 'block';
+            noJobsMsg.style.display = 'none';
+
+            var jobsHtml = '';
+            allJobs.forEach(function(job, index) {
+                var status = job.when === 'Today' ? 'Active' : 'Upcoming';
+                var statusColor = status === 'Active' ? '#28a745' : '#ffc107';
+                
+                jobsHtml += '<div class="job-item" style="border-left: 4px solid ' + statusColor + ';">' +
+                    '<div class="job-info">' +
+                    '<h4>' + (job.title || 'Job Title') + '</h4>' +
+                    '<p>📍 ' + (job.city || 'Location') + ' | 💰 ' + (job.pay || 'N/A') + '</p>' +
+                    '<p>Type: ' + (job.workType || 'N/A') + ' | When: ' + (job.when || 'N/A') + '</p>' +
+                    '<span style="background: ' + statusColor + '; color: white; padding: 4px 8px; border-radius: 3px; font-size: 12px;">' + status + '</span>' +
+                    '</div>' +
+                    '<div style="display: flex; gap: 10px;">' +
+                    '<button class="job-apply-btn" onclick="editJob(' + index + ')" style="background: #0056b3;">Edit</button>' +
+                    '<button class="job-apply-btn" onclick="deleteJob(' + index + ')" style="background: #dc3545;">Delete</button>' +
+                    '</div>' +
+                    '</div>';
+            });
+
+            jobsList.innerHTML = jobsHtml;
+        }
+
+        // Display saved workers
+        function displaySavedWorkers() {
+            var workersList = document.getElementById('savedWorkersList');
+            var noWorkersMsg = document.getElementById('noSavedWorkersMessage');
+
+            if (savedWorkers.length === 0) {
+                workersList.style.display = 'none';
+                noWorkersMsg.style.display = 'block';
+                return;
+            }
+
+            workersList.style.display = 'grid';
+            noWorkersMsg.style.display = 'none';
+
+            var workersHtml = '';
+            savedWorkers.forEach(function(worker, index) {
+                workersHtml += '<div style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">' +
+                    '<div style="font-size: 30px; margin-bottom: 10px;">👤</div>' +
+                    '<h4 style="margin: 0 0 5px 0;">' + (worker.name || 'Worker') + '</h4>' +
+                    '<p style="margin: 0 0 5px 0; color: #666; font-size: 13px;">' + (worker.workType || 'Work Type') + '</p>' +
+                    '<p style="margin: 0 0 10px 0; color: #666; font-size: 13px;">₹' + (worker.wage || 'N/A') + '/day</p>' +
+                    '<button onclick="contactWorker(\'' + (worker.phone || '') + '\')" style="background: #28a745; color: white; padding: 8px; border: none; border-radius: 4px; width: 100%; cursor: pointer; font-size: 12px;">Contact</button>' +
+                    '</div>';
+            });
+
+            workersList.innerHTML = workersHtml;
+        }
+
+        // Display applications
+        function displayApplications() {
+            var appList = document.getElementById('applicationsList');
+            var noAppMsg = document.getElementById('noApplicationsMessage');
+
+            // Mock applications - in a real app, these would come from a database
+            var mockApplications = [
+                { worker: 'Raj Kumar', workType: 'Mason', time: '2 hours ago', status: 'New' },
+                { worker: 'Suresh Patel', workType: 'Plumber', time: '5 hours ago', status: 'Reviewed' }
+            ];
+
+            if (mockApplications.length === 0) {
+                appList.style.display = 'none';
+                noAppMsg.style.display = 'block';
+                return;
+            }
+
+            appList.style.display = 'block';
+            noAppMsg.style.display = 'none';
+
+            var appHtml = '';
+            mockApplications.forEach(function(app) {
+                var statusColor = app.status === 'New' ? '#007bff' : '#6c757d';
+                appHtml += '<div class="job-item">' +
+                    '<div class="job-info">' +
+                    '<h4>' + app.worker + '</h4>' +
+                    '<p>Skill: ' + app.workType + '</p>' +
+                    '<p style="font-size: 12px; color: #999;">' + app.time + '</p>' +
+                    '<span style="background: ' + statusColor + '; color: white; padding: 3px 8px; border-radius: 3px; font-size: 11px;">' + app.status + '</span>' +
+                    '</div>' +
+                    '<div style="display: flex; gap: 10px;">' +
+                    '<button class="job-apply-btn" onclick="viewWorkerApplicationDetail()">View</button>' +
+                    '<button class="job-apply-btn" onclick="contactWorker()" style="background: #28a745;">Contact</button>' +
+                    '</div>' +
+                    '</div>';
+            });
+
+            appList.innerHTML = appHtml;
+        }
+
+        // Search workers
+        function searchWorkers() {
+            var searchTerm = document.getElementById('workerSearchInput').value.toLowerCase();
+            var resultsDiv = document.getElementById('workerSearchResults');
+
+            if (!searchTerm) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+
+            var filteredWorkers = allWorkers.filter(function(w) {
+                return (w.name && w.name.toLowerCase().includes(searchTerm)) ||
+                       (w.workType && w.workType.toLowerCase().includes(searchTerm)) ||
+                       (w.city && w.city.toLowerCase().includes(searchTerm));
+            });
+
+            var resultsHtml = '<h4 style="margin-top: 0;">Found ' + filteredWorkers.length + ' worker(s)</h4>';
+            
+            if (filteredWorkers.length === 0) {
+                resultsHtml += '<p style="color: #999;">No workers found</p>';
+            } else {
+                filteredWorkers.forEach(function(worker, index) {
+                    resultsHtml += '<div style="background: #f9f9f9; padding: 12px; margin-bottom: 10px; border-radius: 6px; border-left: 3px solid #007bff;">' +
+                        '<div style="font-weight: bold;">' + (worker.name || 'Worker') + '</div>' +
+                        '<div style="font-size: 12px; color: #666;">' + (worker.workType || 'Work Type') + ' | 📍 ' + (worker.city || 'Location') + '</div>' +
+                        '<div style="font-size: 12px; color: #666; margin-bottom: 10px;">₹' + (worker.wage || 'N/A') + '/day | Experience: ' + (worker.experience || 'N/A') + '</div>' +
+                        '<button onclick="saveWorker(' + index + ', \'' + (worker.name || '') + '\')" style="background: #007bff; color: white; padding: 6px 12px; border: none; border-radius: 3px; cursor: pointer; font-size: 12px; margin-right: 5px;">Save</button>' +
+                        '<button onclick="contactWorker(\'' + (worker.phone || '') + '\')" style="background: #28a745; color: white; padding: 6px 12px; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">Contact</button>' +
+                        '</div>';
+                });
+            }
+
+            resultsDiv.innerHTML = resultsHtml;
+            resultsDiv.style.display = 'block';
+        }
+
+        // Save worker to shortlist
+        function saveWorker(index, name) {
+            if (allWorkers[index]) {
+                var existingIndex = savedWorkers.findIndex(function(w) { return w.name === name; });
+                
+                if (existingIndex === -1) {
+                    savedWorkers.push(allWorkers[index]);
+                    localStorage.setItem('employerSavedWorkers', JSON.stringify(savedWorkers));
+                    alert('Worker saved to shortlist!');
+                    displaySavedWorkers();
+                } else {
+                    alert('Worker already saved!');
+                }
+            }
+        }
+
+        // Contact worker
+        function contactWorker(phone) {
+            if (phone) {
+                alert('Contact: ' + phone + '\n\nIn a real app, this would open a messaging or calling interface.');
+            } else {
+                alert('Contact information not available');
+            }
+        }
+
+        // Edit job
+        function editJob(index) {
+            alert('Edit job feature coming soon!');
+        }
+
+        // Delete job
+        function deleteJob(index) {
+            if (confirm('Are you sure you want to delete this job?')) {
+                allJobs.splice(index, 1);
+                localStorage.setItem('jobPosts', JSON.stringify(allJobs));
+                displayPostedJobs();
+                alert('Job deleted');
+            }
+        }
+
+        // Edit company profile
+        function editCompanyProfile() {
+            alert('Edit company profile feature coming soon!');
+        }
+
+        // Browse all candidates
+        function browseCandidates() {
+            window.location.href = 'search-results.html?filter=workers';
+        }
+
+        // View job analytics
+        function viewJobAnalytics() {
+            alert('Analytics: ' + allJobs.length + ' jobs posted\n' + savedWorkers.length + ' workers shortlisted');
+        }
+
+        // View worker application detail
+        function viewWorkerApplicationDetail() {
+            alert('Application details will be shown here');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('currentEmployer');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+</body>
+</html>

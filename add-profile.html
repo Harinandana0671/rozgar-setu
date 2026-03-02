@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Profile - Rozgar Setu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <button onclick="history.back()" class="back-btn">←</button>
+        <h1>Add Your Profile</h1>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <form id="profileForm" onsubmit="saveProfile(event)">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="fullName" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label>Mobile Number *</label>
+                    <input type="tel" id="phone" required placeholder="10-digit mobile number">
+                </div>
+
+                <div class="form-group">
+                    <label>Type of Work *</label>
+                    <select id="workType" required>
+                        <option value="">Select work type</option>
+                        <option value="Mason">Mason (राजगीर)</option>
+                        <option value="Plumber">Plumber (प्लंबर)</option>
+                        <option value="Electrician">Electrician (इलेक्ट्रीशियन)</option>
+                        <option value="Carpenter">Carpenter (बढ़ई)</option>
+                        <option value="Painter">Painter (पेंटर)</option>
+                        <option value="Driver">Driver (ड्राइवर)</option>
+                        <option value="Domestic Help">Domestic Help (घरेलू सहायक)</option>
+                        <option value="Construction">Construction (निर्माण)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>City *</label>
+                    <input type="text" id="city" required placeholder="Enter your city">
+                </div>
+
+                <div class="form-group">
+                    <label>Area/Locality *</label>
+                    <input type="text" id="area" required placeholder="Enter your area">
+                </div>
+
+                <div class="form-group">
+                    <label>Daily Wage (₹)</label>
+                    <input type="text" id="wage" placeholder="e.g. 500">
+                </div>
+
+                <div class="form-group">
+                    <label>Experience</label>
+                    <select id="experience">
+                        <option value="Fresher">Fresher</option>
+                        <option value="1-2 years">1-2 years</option>
+                        <option value="3-5 years">3-5 years</option>
+                        <option value="5+ years">5+ years</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="availableToday"> Available Today
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="availableTomorrow"> Available Tomorrow
+                    </label>
+                </div>
+
+                <button type="submit" class="primary-btn">Save Profile</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="search-results.html" class="nav-item">
+            <span class="nav-icon">🔍</span>
+            <span>Search</span>
+        </a>
+        <a href="add-profile.html" class="nav-item active">
+            <span class="nav-icon">➕</span>
+            <span>Add Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span>Post Job</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script>
+        function saveProfile(event) {
+            event.preventDefault();
+            
+            // Get form values
+            const profile = {
+                name: document.getElementById('fullName').value,
+                phone: document.getElementById('phone').value,
+                workType: document.getElementById('workType').value,
+                city: document.getElementById('city').value,
+                area: document.getElementById('area').value,
+                wage: document.getElementById('wage').value,
+                experience: document.getElementById('experience').value,
+                availableToday: document.getElementById('availableToday').checked,
+                availableTomorrow: document.getElementById('availableTomorrow').checked
+            };
+            
+            // Save to localStorage
+            let profiles = JSON.parse(localStorage.getItem('workerProfiles') || '[]');
+            profiles.push(profile);
+            localStorage.setItem('workerProfiles', JSON.stringify(profiles));
+            
+            alert('Profile saved successfully!');
+            window.location.href = 'worker-dashboard.html';
+        }
+    </script>
+</body>
+</html>

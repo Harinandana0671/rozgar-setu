@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Rozgar Setu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <button onclick="history.back()" class="back-btn">←</button>
+        <h1>Search Results</h1>
+    </header>
+
+    <main class="main-content">
+        <!-- Search Bar -->
+        <div class="search-container" style="padding: 15px; background: #f5f5f5; margin-bottom: 20px;">
+            <input type="text" id="searchInput" placeholder="Search for work... e.g. Mason, Plumber, Driver" style="width: 85%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+            <button onclick="performSearch()" style="width: 12%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Search</button>
+        </div>
+
+        <!-- Filter Options -->
+        <div class="filters-section" style="padding: 0 15px; margin-bottom: 20px;">
+            <h3>Filters</h3>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="filter-btn active" onclick="filterResults('all')">All</button>
+                <button class="filter-btn" onclick="filterResults('workers')">Workers</button>
+                <button class="filter-btn" onclick="filterResults('jobs')">Jobs</button>
+                <button class="filter-btn" onclick="filterResults('today')">Available Today</button>
+            </div>
+        </div>
+
+        <!-- Results Summary -->
+        <div style="padding: 0 15px; margin-bottom: 15px;">
+            <p id="resultsSummary" style="color: #666; font-size: 14px;">Found results matching your search</p>
+        </div>
+
+        <!-- Workers Results -->
+        <div id="workersSection" style="display: none;">
+            <h2 style="padding: 15px 15px 0; font-size: 18px;">Available Workers</h2>
+            <div class="workers-grid" id="workerResults">
+                <!-- Worker cards will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Jobs Results -->
+        <div id="jobsSection" style="display: none;">
+            <h2 style="padding: 15px 15px 0; font-size: 18px;">Jobs Available</h2>
+            <div class="jobs-list" id="jobResults">
+                <!-- Job cards will be inserted here -->
+            </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" style="text-align: center; padding: 40px 15px; display: none;">
+            <p style="font-size: 18px; color: #666;">No results found</p>
+            <p style="font-size: 14px; color: #999;">Try searching with different keywords</p>
+            <button class="primary-btn" onclick="window.location.href='index.html'" style="margin-top: 20px;">Back to Home</button>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="search-results.html" class="nav-item active">
+            <span class="nav-icon">🔍</span>
+            <span>Search</span>
+        </a>
+        <a href="add-profile.html" class="nav-item">
+            <span class="nav-icon">➕</span>
+            <span>Add Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span>Post Job</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script src="main.js"></script>
+    <script>
+        var currentSearchQuery = '';
+        var currentFilter = 'all';
+        var allWorkers = [];
+        var allJobs = [];
+
+        // Get URL parameters
+        function getUrlParameter(name) {
+            var url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            var results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Load initial search data
+        function initSearch() {
+            var query = getUrlParameter('q');
+            var category = getUrlParameter('category');
+            var filter = getUrlParameter('filter');
+
+            if (query) {
+                currentSearchQuery = query;
+                document.getElementById('searchInput').value = query;
+            } else if (category) {
+                currentSearchQuery = category;
+                document.getElementById('searchInput').value = category;
+            }
+
+            if (filter) {
+                currentFilter = filter;
+                filterResults(filter);
+            }
+
+            loadData();
+            performSearch();
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            allWorkers = JSON.parse(localStorage.getItem('workerProfiles') || '[]');
+            allJobs = JSON.parse(localStorage.getItem('jobPosts') || '[]');
+        }
+
+        // Perform search
+        function performSearch() {
+            var searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            currentSearchQuery = searchTerm;
+
+            var filteredWorkers = allWorkers.filter(function(worker) {
+                return (worker.name && worker.name.toLowerCase().includes(searchTerm)) ||
+                       (worker.workType && worker.workType.toLowerCase().includes(searchTerm)) ||
+                       (worker.city && worker.city.toLowerCase().includes(searchTerm)) ||
+                       (worker.area && worker.area.toLowerCase().includes(searchTerm));
+            });
+
+            var filteredJobs = allJobs.filter(function(job) {
+                return (job.title && job.title.toLowerCase().includes(searchTerm)) ||
+                       (job.workType && job.workType.toLowerCase().includes(searchTerm)) ||
+                       (job.city && job.city.toLowerCase().includes(searchTerm)) ||
+                       (job.description && job.description.toLowerCase().includes(searchTerm));
+            });
+
+            displayResults(filteredWorkers, filteredJobs);
+        }
+
+        // Display results based on current filter
+        function displayResults(workers, jobs) {
+            var showWorkers = currentFilter === 'all' || currentFilter === 'workers' || currentFilter === 'today';
+            var showJobs = currentFilter === 'all' || currentFilter === 'jobs';
+
+            document.getElementById('workersSection').style.display = showWorkers && workers.length > 0 ? 'block' : 'none';
+            document.getElementById('jobsSection').style.display = showJobs && jobs.length > 0 ? 'block' : 'none';
+            document.getElementById('noResults').style.display = (workers.length === 0 && jobs.length === 0) && currentSearchQuery ? 'block' : 'none';
+
+            // Display workers
+            if (showWorkers) {
+                var workerHtml = '';
+                workers.forEach(function(worker, index) {
+                    if (currentFilter === 'today' && !worker.availableToday) return;
+                    
+                    workerHtml += '<div class="worker-card-small" onclick="viewWorkerProfile(' + index + ')" style="cursor: pointer;">' +
+                        '<div class="worker-avatar">👨</div>' +
+                        '<div class="worker-name">' + (worker.name || 'Worker') + '</div>' +
+                        '<div class="worker-work">' + (worker.workType || 'Work') + '</div>' +
+                        '<div class="worker-location">📍 ' + (worker.city || 'Location') + '</div>' +
+                        (worker.availableToday ? '<span class="available-badge">Available Today</span>' : '') +
+                        '</div>';
+                });
+                document.getElementById('workerResults').innerHTML = workerHtml || '<p style="padding: 20px; text-align: center;">No workers found</p>';
+            }
+
+            // Display jobs
+            if (showJobs) {
+                var jobHtml = '';
+                jobs.forEach(function(job, index) {
+                    jobHtml += '<div class="job-item" style="cursor: pointer;">' +
+                        '<div class="job-info">' +
+                        '<h4>' + (job.title || 'Job') + '</h4>' +
+                        '<p>📍 ' + (job.city || 'Location') + ' | 💰 ' + (job.pay || 'N/A') + '</p>' +
+                        '<p>📅 ' + (job.when || 'Date TBD') + '</p>' +
+                        '</div>' +
+                        '<button class="job-apply-btn" onclick="viewJobDetails(' + index + ')">Apply</button>' +
+                        '</div>';
+                });
+                document.getElementById('jobResults').innerHTML = jobHtml || '<p style="padding: 20px; text-align: center;">No jobs found</p>';
+            }
+
+            // Update summary
+            var total = workers.length + jobs.length;
+            var summary = 'Found ' + total + ' result' + (total !== 1 ? 's' : '');
+            if (currentSearchQuery) {
+                summary += ' for "' + currentSearchQuery + '"';
+            }
+            document.getElementById('resultsSummary').textContent = summary;
+        }
+
+        // Filter results
+        function filterResults(filter) {
+            currentFilter = filter;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Apply filters
+            var filteredWorkers = allWorkers;
+            var filteredJobs = allJobs;
+
+            if (currentSearchQuery) {
+                var searchTerm = currentSearchQuery.toLowerCase();
+                filteredWorkers = filteredWorkers.filter(function(worker) {
+                    return (worker.name && worker.name.toLowerCase().includes(searchTerm)) ||
+                           (worker.workType && worker.workType.toLowerCase().includes(searchTerm)) ||
+                           (worker.city && worker.city.toLowerCase().includes(searchTerm)) ||
+                           (worker.area && worker.area.toLowerCase().includes(searchTerm));
+                });
+
+                filteredJobs = filteredJobs.filter(function(job) {
+                    return (job.title && job.title.toLowerCase().includes(searchTerm)) ||
+                           (job.workType && job.workType.toLowerCase().includes(searchTerm)) ||
+                           (job.city && job.city.toLowerCase().includes(searchTerm)) ||
+                           (job.description && job.description.toLowerCase().includes(searchTerm));
+                });
+            }
+
+            if (filter === 'today') {
+                filteredWorkers = filteredWorkers.filter(function(w) { return w.availableToday; });
+            }
+
+            displayResults(filteredWorkers, filteredJobs);
+        }
+
+        // View worker profile
+        function viewWorkerProfile(index) {
+            if (allWorkers[index]) {
+                alert('Worker: ' + (allWorkers[index].name || 'N/A') + 
+                      '\nWork: ' + (allWorkers[index].workType || 'N/A') + 
+                      '\nWage: ₹' + (allWorkers[index].wage || 'N/A'));
+            }
+        }
+
+        // View job details
+        function viewJobDetails(index) {
+            if (allJobs[index]) {
+                alert('Job: ' + (allJobs[index].title || 'N/A') + 
+                      '\nWork Type: ' + (allJobs[index].workType || 'N/A') + 
+                      '\nPay: ' + (allJobs[index].pay || 'N/A') + 
+                      '\nWhen: ' + (allJobs[index].when || 'N/A') +
+                      '\nDescription: ' + (allJobs[index].description || 'N/A'));
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initSearch);
+    </script>
+</body>
+</html>

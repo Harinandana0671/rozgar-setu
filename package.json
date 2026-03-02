@@ -1,0 +1,11 @@
+{
+  "name": "rozgar-setu",
+  "version": "1.0.0",
+  "description": "A basic hands-on project for job/resource management.",
+  "main": "main.js",
+  "scripts": {
+    "start": "echo \"No start script defined\""
+  },
+  "author": "",
+  "license": "MIT"
+}

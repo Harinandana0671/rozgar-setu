@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rozgar Setu - Find Work Today</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main Header -->
+    <header class="main-header">
+        <h1 class="site-title">Rozgar Setu</h1>
+        <p class="site-tagline">Find Work Today • आज काम पाएं</p>
+        
+        <!-- Voice Search Button -->
+        <button class="voice-search-btn" id="voiceSearchBtn">
+            <span class="mic-icon">🎤</span>
+            <span>Search with Voice</span>
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Role Selection Cards -->
+        <div class="role-selection">
+            <h2>Who are you?</h2>
+            <div class="role-cards">
+                <!-- Worker Card -->
+                <div class="role-card worker-card" onclick="window.location.href='worker-dashboard.html'">
+                    <div class="card-icon">👷</div>
+                    <h3>Worker / Laborer</h3>
+                    <p>Looking for work? Create your profile</p>
+                    <button class="card-btn">Find Work</button>
+                </div>
+                
+                <!-- Employer Card -->
+                <div class="role-card employer-card" onclick="window.location.href='employer-dashboard.html'">
+                    <div class="card-icon">🏢</div>
+                    <h3>Employer</h3>
+                    <p>Need workers? Post a job or search</p>
+                    <button class="card-btn">Hire Worker</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Search -->
+        <div class="quick-search">
+            <h3>Quick Search</h3>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search for work... e.g. Mason, Plumber, Driver">
+                <button onclick="searchWork()">Search</button>
+            </div>
+            
+            <!-- Popular Categories -->
+            <div class="work-categories">
+                <button class="category-chip" onclick="searchByCategory('Mason')">👷 Mason</button>
+                <button class="category-chip" onclick="searchByCategory('Plumber')">🔧 Plumber</button>
+                <button class="category-chip" onclick="searchByCategory('Electrician')">⚡ Electrician</button>
+                <button class="category-chip" onclick="searchByCategory('Driver')">🚗 Driver</button>
+                <button class="category-chip" onclick="searchByCategory('Domestic Help')">🏠 Domestic Help</button>
+                <button class="category-chip" onclick="searchByCategory('Painter')">🎨 Painter</button>
+            </div>
+        </div>
+
+        <!-- Available Today -->
+        <div class="section">
+            <div class="section-header">
+                <h3>Available Today</h3>
+                <a href="search-results.html?filter=today">View All →</a>
+            </div>
+            <div class="workers-grid" id="todayWorkers">
+                <!-- Worker 1 -->
+                <div class="worker-card-small" onclick="viewWorkerProfile(1)">
+                    <div class="worker-avatar">👨</div>
+                    <div class="worker-name">Raj Kumar</div>
+                    <div class="worker-work">Mason</div>
+                    <div class="worker-location">📍 Delhi</div>
+                    <span class="available-badge">Available Today</span>
+                </div>
+                <!-- Worker 2 -->
+                <div class="worker-card-small" onclick="viewWorkerProfile(2)">
+                    <div class="worker-avatar">👨</div>
+                    <div class="worker-name">Suresh</div>
+                    <div class="worker-work">Plumber</div>
+                    <div class="worker-location">📍 Mumbai</div>
+                    <span class="available-badge">Available Today</span>
+                </div>
+                <!-- Worker 3 -->
+                <div class="worker-card-small" onclick="viewWorkerProfile(3)">
+                    <div class="worker-avatar">👩</div>
+                    <div class="worker-name">Priya</div>
+                    <div class="worker-work">Domestic Help</div>
+                    <div class="worker-location">📍 Bangalore</div>
+                    <span class="available-badge">Available Today</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Jobs -->
+        <div class="section">
+            <div class="section-header">
+                <h3>Recent Jobs</h3>
+                <a href="search-results.html?filter=jobs">View All →</a>
+            </div>
+            <div class="jobs-list">
+                <!-- Job 1 -->
+                <div class="job-item" onclick="viewJobDetails(1)">
+                    <div class="job-info">
+                        <h4>Need a Plumber for bathroom repair</h4>
+                        <p>📍 Delhi | 💰 ₹800-1000/day</p>
+                        <p>📅 Tomorrow morning</p>
+                    </div>
+                    <button class="job-apply-btn">Apply</button>
+                </div>
+                <!-- Job 2 -->
+                <div class="job-item" onclick="viewJobDetails(2)">
+                    <div class="job-info">
+                        <h4>Driver needed for one day</h4>
+                        <p>📍 Mumbai | 💰 ₹500</p>
+                        <p>📅 Today 2 PM</p>
+                    </div>
+                    <button class="job-apply-btn">Apply</button>
+                </div>
+                <!-- Job 3 -->
+                <div class="job-item" onclick="viewJobDetails(3)">
+                    <div class="job-info">
+                        <h4>Construction workers (2 needed)</h4>
+                        <p>📍 Bangalore | 💰 ₹600/day</p>
+                        <p>📅 Starting tomorrow</p>
+                    </div>
+                    <button class="job-apply-btn">Apply</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="search-results.html" class="nav-item">
+            <span class="nav-icon">🔍</span>
+            <span>Search</span>
+        </a>
+        <a href="add-profile.html" class="nav-item">
+            <span class="nav-icon">➕</span>
+            <span>Add Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span>Post Job</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script>
+        // Voice Search Function
+        document.getElementById('voiceSearchBtn').addEventListener('click', function() {
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'en-US';
+                
+                recognition.onresult = function(event) {
+                    document.getElementById('searchInput').value = event.results[0][0].transcript;
+                    searchWork();
+                };
+                
+                recognition.start();
+            } else {
+                alert('Voice search is not supported in your browser. Please type your search.');
+            }
+        });
+
+        // Search Functions
+        function searchWork() {
+            const searchTerm = document.getElementById('searchInput').value;
+            if(searchTerm) {
+                window.location.href = 'search-results.html?q=' + encodeURIComponent(searchTerm);
+            }
+        }
+
+        function searchByCategory(category) {
+            window.location.href = 'search-results.html?category=' + encodeURIComponent(category);
+        }
+
+        // View Functions
+        function viewWorkerProfile(id) {
+            window.location.href = 'worker-profile.html?id=' + id;
+        }
+
+        function viewJobDetails(id) {
+            window.location.href = 'job-details.html?id=' + id;
+        }
+    </script>
+</body>
+</html>

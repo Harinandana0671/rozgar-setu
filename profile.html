@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Rozgar Setu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <button onclick="history.back()" class="back-btn">←</button>
+        <h1>My Profile</h1>
+    </header>
+
+    <main class="main-content">
+        <!-- User Profile Card -->
+        <div class="profile-card">
+            <div class="profile-avatar-large">👤</div>
+            <h2 id="profileName">User Profile</h2>
+            <p id="profileRole" class="profile-role">Worker</p>
+            <p id="profileLocation" class="profile-location">📍 Location</p>
+            
+            <div class="profile-stats">
+                <div class="stat">
+                    <span class="stat-value" id="jobsCompleted">0</span>
+                    <span class="stat-label">Jobs Done</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="rating">4.5</span>
+                    <span class="stat-label">Rating</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Details -->
+        <div class="section">
+            <h3>Personal Information</h3>
+            <div class="profile-details">
+                <div class="detail-item">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value" id="detailName">—</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Phone:</span>
+                    <span class="detail-value" id="detailPhone">—</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value" id="detailEmail">—</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">City:</span>
+                    <span class="detail-value" id="detailCity">—</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Area:</span>
+                    <span class="detail-value" id="detailArea">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Work Information -->
+        <div class="section">
+            <h3>Work Information</h3>
+            <div class="profile-details">
+                <div class="detail-item">
+                    <span class="detail-label">Type of Work:</span>
+                    <span class="detail-value" id="detailWorkType">—</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Experience:</span>
+                    <span class="detail-value" id="detailExperience">—</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Daily Wage:</span>
+                    <span class="detail-value" id="detailWage">—</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Verified:</span>
+                    <span class="detail-value" id="detailVerified">⭐ Yes</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Availability -->
+        <div class="section">
+            <h3>Availability</h3>
+            <div class="availability-status">
+                <div class="status-item">
+                    <span id="availTodayLabel">Available Today</span>
+                    <span id="availTodayStatus" class="status-badge available">Yes</span>
+                </div>
+                <div class="status-item">
+                    <span id="availTomorrowLabel">Available Tomorrow</span>
+                    <span id="availTomorrowStatus" class="status-badge unavailable">No</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="section">
+            <button class="primary-btn" onclick="editProfile()">Edit Profile</button>
+            <button class="secondary-btn" onclick="viewJobHistory()">Job History</button>
+            <button class="secondary-btn" onclick="viewReviews()">Reviews & Ratings</button>
+            <button class="secondary-btn danger-btn" onclick="logout()">Sign Out</button>
+        </div>
+
+        <!-- Recent Reviews -->
+        <div class="section">
+            <h3>Recent Reviews</h3>
+            <div class="reviews-list">
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-author">Employer Name</span>
+                        <span class="review-rating">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <p class="review-text">Professional work, very reliable and honest person.</p>
+                    <span class="review-date">2 days ago</span>
+                </div>
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-author">Another Client</span>
+                        <span class="review-rating">⭐⭐⭐⭐</span>
+                    </div>
+                    <p class="review-text">Good work quality, finished on time.</p>
+                    <span class="review-date">1 week ago</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="search-results.html" class="nav-item">
+            <span class="nav-icon">🔍</span>
+            <span>Search</span>
+        </a>
+        <a href="add-profile.html" class="nav-item">
+            <span class="nav-icon">➕</span>
+            <span>Add Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span>Post Job</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script src="main.js"></script>
+    <script>
+        // Load profile data on page load
+        function loadProfileData() {
+            var profiles = JSON.parse(localStorage.getItem('workerProfiles') || '[]');
+            if (profiles.length > 0) {
+                var profile = profiles[profiles.length - 1]; // Load latest profile
+                document.getElementById('profileName').textContent = profile.name || 'User Profile';
+                document.getElementById('detailName').textContent = profile.name || '—';
+                document.getElementById('detailPhone').textContent = profile.phone || '—';
+                document.getElementById('detailCity').textContent = profile.city || '—';
+                document.getElementById('detailArea').textContent = profile.area || '—';
+                document.getElementById('detailWorkType').textContent = profile.workType || '—';
+                document.getElementById('detailExperience').textContent = profile.experience || '—';
+                document.getElementById('detailWage').textContent = profile.wage ? '₹' + profile.wage : '—';
+                document.getElementById('profileLocation').textContent = '📍 ' + (profile.city ? profile.city + ' - ' + profile.area : 'Location');
+                
+                var availTodayEl = document.getElementById('availTodayStatus');
+                var availTomEl = document.getElementById('availTomorrowStatus');
+                if (profile.availableToday) {
+                    availTodayEl.textContent = 'Yes';
+                    availTodayEl.className = 'status-badge available';
+                } else {
+                    availTodayEl.textContent = 'No';
+                    availTodayEl.className = 'status-badge unavailable';
+                }
+                if (profile.availableTomorrow) {
+                    availTomEl.textContent = 'Yes';
+                    availTomEl.className = 'status-badge available';
+                } else {
+                    availTomEl.textContent = 'No';
+                    availTomEl.className = 'status-badge unavailable';
+                }
+            }
+        }
+
+        function editProfile() {
+            window.location.href = 'add-profile.html';
+        }
+
+        function viewJobHistory() {
+            alert('Job history feature coming soon!');
+        }
+
+        function viewReviews() {
+            alert('Reviews & ratings feature coming soon!');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Load profile when page loads
+        document.addEventListener('DOMContentLoaded', loadProfileData);
+    </script>
+</body>
+</html>

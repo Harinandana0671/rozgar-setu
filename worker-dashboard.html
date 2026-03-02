@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Dashboard - Rozgar Setu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <button onclick="history.back()" class="back-btn">←</button>
+        <h1>Worker Dashboard</h1>
+    </header>
+
+    <main class="main-content">
+        <!-- Profile Summary -->
+        <div class="profile-summary-card">
+            <div class="profile-avatar-large">👤</div>
+            <div class="profile-info">
+                <h2 id="workerName">Raj Kumar</h2>
+                <p id="workerType">Mason</p>
+                <p id="workerLocation">📍 Delhi - Karol Bagh</p>
+            </div>
+            <button class="edit-profile-btn" onclick="window.location.href='add-profile.html'">Edit</button>
+        </div>
+
+        <!-- Availability -->
+        <div class="section">
+            <h3>Set Availability</h3>
+            <div class="toggle-container">
+                <span>Available Today</span>
+                <label class="switch">
+                    <input type="checkbox" id="todayToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="toggle-container">
+                <span>Available Tomorrow</span>
+                <label class="switch">
+                    <input type="checkbox" id="tomorrowToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Today's Jobs -->
+        <div class="section">
+            <h3>Jobs Available Today</h3>
+            <div class="jobs-list" id="todayJobsList">
+                <!-- Jobs will be loaded here -->
+            </div>
+            <div id="noJobsMsg" style="text-align: center; padding: 20px; color: #999;">
+                <p>No jobs available today</p>
+            </div>
+        </div>
+
+        <!-- My Applications -->
+        <div class="section">
+            <h3>My Applications</h3>
+            <div id="myApplicationsList">
+                <!-- Applications will be loaded here -->
+            </div>
+            <div id="noApplicationsMsg" style="text-align: center; padding: 20px; color: #999; display: none;">
+                <p>No applications yet</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="search-results.html" class="nav-item">
+            <span class="nav-icon">🔍</span>
+            <span>Search</span>
+        </a>
+        <a href="add-profile.html" class="nav-item">
+            <span class="nav-icon">➕</span>
+            <span>Add Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span>Post Job</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script src="main.js"></script>
+    <script>
+        var allJobs = [];
+        var myApplications = [];
+
+        // Load worker profile data
+        function loadWorkerProfile() {
+            var profiles = JSON.parse(localStorage.getItem('workerProfiles') || '[]');
+            if (profiles.length > 0) {
+                var profile = profiles[profiles.length - 1];
+                document.getElementById('workerName').textContent = profile.name || 'Worker';
+                document.getElementById('workerType').textContent = profile.workType || 'Work Type';
+                document.getElementById('workerLocation').textContent = '📍 ' + (profile.city || 'Location') + ' - ' + (profile.area || 'Area');
+                
+                // Load availability toggles
+                document.getElementById('todayToggle').checked = profile.availableToday || false;
+                document.getElementById('tomorrowToggle').checked = profile.availableTomorrow || false;
+            }
+        }
+
+        // Load jobs from localStorage
+        function loadJobs() {
+            allJobs = JSON.parse(localStorage.getItem('jobPosts') || '[]');
+            myApplications = JSON.parse(localStorage.getItem('myApplications') || '[]');
+            displayJobs();
+            displayApplications();
+        }
+
+        // Display available jobs
+        function displayJobs() {
+            var jobsList = document.getElementById('todayJobsList');
+            var noJobsMsg = document.getElementById('noJobsMsg');
+
+            // Show all jobs (not filtering by 'Today' to show all available jobs)
+            var todayJobs = allJobs;
+
+            if (todayJobs.length === 0) {
+                jobsList.style.display = 'none';
+                noJobsMsg.style.display = 'block';
+                return;
+            }
+
+            jobsList.style.display = 'block';
+            noJobsMsg.style.display = 'none';
+
+            var jobsHtml = '';
+            todayJobs.forEach(function(job, index) {
+                var isApplied = myApplications.some(function(app) { 
+                    return app.jobTitle === job.title; 
+                });
+
+                var buttonText = isApplied ? 'Applied ✓' : 'Apply';
+                var buttonDisabled = isApplied ? 'disabled' : '';
+                var buttonStyle = isApplied ? 'background: #6c757d; cursor: not-allowed;' : '';
+
+                jobsHtml += '<div class="job-item">' +
+                    '<div class="job-info">' +
+                    '<h4>' + (job.title || 'Job Title') + '</h4>' +
+                    '<p>📍 ' + (job.city || 'Location') + ' | 💰 ' + (job.pay || 'N/A') + '</p>' +
+                    '<p style="font-size: 13px; color: #666;">Posted by: ' + (job.contactName || 'Employer') + '</p>' +
+                    '<p style="font-size: 13px; color: #666;">When: ' + (job.when || 'N/A') + '</p>' +
+                    '<p style="font-size: 13px; color: #666;">' + (job.description || 'No description') + '</p>' +
+                    '</div>' +
+                    '<button class="job-apply-btn" ' + buttonDisabled + ' onclick="applyJob(' + index + ')" style="' + buttonStyle + '">' + buttonText + '</button>' +
+                    '</div>';
+            });
+
+            jobsList.innerHTML = jobsHtml;
+        }
+
+        // Apply for a job
+        function applyJob(jobIndex) {
+            var profiles = JSON.parse(localStorage.getItem('workerProfiles') || '[]');
+            
+            if (profiles.length === 0) {
+                alert('Please create a profile first!');
+                window.location.href = 'add-profile.html';
+                return;
+            }
+
+            var profile = profiles[profiles.length - 1];
+            var job = allJobs[jobIndex];
+
+            if (!job) {
+                alert('Job not found!');
+                return;
+            }
+
+            var application = {
+                jobTitle: job.title || 'Job',
+                jobCity: job.city || 'Location',
+                jobPay: job.pay || 'N/A',
+                workerName: profile.name || 'Worker',
+                workerPhone: profile.phone || 'N/A',
+                workType: profile.workType || 'Work Type',
+                applicationDate: new Date().toLocaleString(),
+                status: 'Applied'
+            };
+
+            myApplications.push(application);
+            localStorage.setItem('myApplications', JSON.stringify(myApplications));
+
+            alert('Application submitted successfully!');
+            displayJobs();
+            displayApplications();
+        }
+
+        // Display my applications
+        function displayApplications() {
+            var appsList = document.getElementById('myApplicationsList');
+            var noAppMsg = document.getElementById('noApplicationsMsg');
+
+            if (myApplications.length === 0) {
+                appsList.style.display = 'none';
+                noAppMsg.style.display = 'block';
+                return;
+            }
+
+            appsList.style.display = 'block';
+            noAppMsg.style.display = 'none';
+
+            var appsHtml = '';
+            myApplications.forEach(function(app, index) {
+                var statusColor = app.status === 'Applied' ? '#007bff' : (app.status === 'Accepted' ? '#28a745' : '#dc3545');
+                
+                appsHtml += '<div class="job-item" style="border-left: 4px solid ' + statusColor + ';">' +
+                    '<div class="job-info">' +
+                    '<h4>' + (app.jobTitle || 'Job') + '</h4>' +
+                    '<p>Location: ' + (app.jobCity || 'N/A') + ' | Pay: ' + (app.jobPay || 'N/A') + '</p>' +
+                    '<p>Applied on: ' + (app.applicationDate || 'N/A') + '</p>' +
+                    '<p style="font-size: 13px; color: #666;">' +
+                    '<span style="background: ' + statusColor + '; color: white; padding: 3px 8px; border-radius: 3px;">' +
+                    (app.status || 'Pending') + '</span></p>' +
+                    '</div>' +
+                    '<button class="job-apply-btn" onclick="cancelApplication(' + index + ')" style="background: #dc3545;">Cancel</button>' +
+                    '</div>';
+            });
+
+            appsList.innerHTML = appsHtml;
+        }
+
+        // Cancel application
+        function cancelApplication(index) {
+            if (confirm('Are you sure you want to cancel this application?')) {
+                myApplications.splice(index, 1);
+                localStorage.setItem('myApplications', JSON.stringify(myApplications));
+                displayJobs();
+                displayApplications();
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadWorkerProfile();
+            loadJobs();
+
+            // Save availability changes
+            document.getElementById('todayToggle').addEventListener('change', function() {
+                var profiles = JSON.parse(localStorage.getItem('workerProfiles') || '[]');
+                if (profiles.length > 0) {
+                    profiles[profiles.length - 1].availableToday = this.checked;
+                    localStorage.setItem('workerProfiles', JSON.stringify(profiles));
+                }
+            });
+
+            document.getElementById('tomorrowToggle').addEventListener('change', function() {
+                var profiles = JSON.parse(localStorage.getItem('workerProfiles') || '[]');
+                if (profiles.length > 0) {
+                    profiles[profiles.length - 1].availableTomorrow = this.checked;
+                    localStorage.setItem('workerProfiles', JSON.stringify(profiles));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
