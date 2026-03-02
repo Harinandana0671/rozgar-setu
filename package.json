@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "rozgar-setu",
   "version": "1.0.0",
@@ -8,4 +9,16 @@
   },
   "author": "",
   "license": "MIT"
+=======
+{
+  "name": "rozgar-setu",
+  "version": "1.0.0",
+  "description": "A basic hands-on project for job/resource management.",
+  "main": "main.js",
+  "scripts": {
+    "start": "echo \"No start script defined\""
+  },
+  "author": "",
+  "license": "MIT"
+>>>>>>> d64be6a0226c4ffe2425ced872e0d0ae4e81abc0
 }

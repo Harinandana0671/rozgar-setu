@@ -4,6 +4,9 @@
 A lightweight job/resource management web app built with HTML, CSS, and JavaScript. It enables employers and workers to post jobs, search listings, and manage profiles.
 
 ## 🔧 Tech Stack
+
+> **Project structure:** Core HTML and JavaScript live in the `src/` folder; static assets such as CSS and images are placed in `public/`. A root `index.html` simply redirects to `src/index.html` so existing workflows continue functioning.
+
 - HTML5
 - CSS3
 - JavaScript (vanilla)
@@ -26,11 +29,11 @@ cd rozgar_setu
 _No dependencies to install for the static version. If you add a backend, use `npm install` or `pip install -r requirements.txt` accordingly._
 
 ## ▶️ Run commands
-Open `public/index.html` in your browser or serve the `public/` folder via a simple HTTP server:
+Open `src/index.html` in your browser (or simply visit the root, which redirects) or serve the folder via a simple HTTP server:
 ```bash
-# using Python 3
-cd public
+# using Python 3 from project root
 python -m http.server 8000
+# then browse http://localhost:8000/src/index.html
 ```
 
 ## 📸 Screenshots
@@ -77,10 +80,9 @@ This project is licensed under the [MIT License](LICENSE).
 > - [x] Team members
 > - [x] License info
 > - [x] Folders (`src/`, `public/`, `docs/`)
+> - [x] Root redirect to `src/index.html`
 > - [x] Lowercase folder names
 > - [x] No spaces in filenames
-> - [x] HTML/CSS pages placed in `public/`
-> - [x] JavaScript source placed in `src/`
 > - [ ] Deploy live link (HTTPS)
 > - [x] Code comments and organization (ongoing)
 > - [x] Meaningful commits (ongoing)

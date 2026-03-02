@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Node modules
 node_modules/
 
@@ -21,3 +22,28 @@ Thumbs.db
 
 # env files
 .env
+=======
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Build output
+dist/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# env files
+.env
+>>>>>>> d64be6a0226c4ffe2425ced872e0d0ae4e81abc0
