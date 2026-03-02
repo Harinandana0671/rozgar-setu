@@ -1,89 +1,78 @@
-# Rozgar Setu
+# 🎯 Rozgar Setu
 
-> **Project description:**
-A lightweight job/resource management web app built with HTML, CSS, and JavaScript. It enables employers and workers to post jobs, search listings, and manage profiles.
-
-## 🔧 Tech Stack
-
-> **Project structure:** Core HTML and JavaScript live in the `src/` folder; static assets such as CSS and images are placed in `public/`. A root `index.html` simply redirects to `src/index.html` so existing workflows continue functioning.
-
-- HTML5
-- CSS3
-- JavaScript (vanilla)
-
-## 🚀 Features
-- User-friendly job posting form
-- Search and filter job listings
-- Employer and worker dashboards
-- Profile management for both user types
-- Responsive layout for mobile devices
-
-> _(Add more than four features as you expand the project)_
-
-## 🛠 Installation
-```bash
-# clone the repo
-git clone <repo-url>
-cd rozgar_setu
-```
-_No dependencies to install for the static version. If you add a backend, use `npm install` or `pip install -r requirements.txt` accordingly._
-
-## ▶️ Run commands
-Open `src/index.html` in your browser (or simply visit the root, which redirects) or serve the folder via a simple HTTP server:
-```bash
-# using Python 3 from project root
-python -m http.server 8000
-# then browse http://localhost:8000/src/index.html
-```
-
-## 📸 Screenshots
-1. ![Home page](Screenshot1.png)
-2. ![Post form](Screenshot2.png)
-3. ![Dashboard](Screenshot3.png)
-
-> _(Place three or more actual images in a `screenshots/` folder.)_
-
-## 🎥 Demo Video
-[Watch the project demo](https://example.com/demo)
-
-## 🏗 Architecture
-Diagram showing how HTML, CSS, and JS interact: see `docs/architecture_diagram.png`.
-
-## 📡 API Documentation
-_No backend currently. Add details here once APIs are created._
-
-## 👥 Team Members
-- [Harinandana S](harinandana76@gmail.com)
-- [Anugraha Sunny](anugrahasunny2006@gmail.com)
-
-> _(Include real names and contact information before publishing.)_
-
-## 📄 License
-This project is licensed under the [MIT License](LICENSE).
+> A lightweight job and resource management web application that connects employers and workers through a simple and responsive interface.
 
 ---
 
-> ✅ **Checklist**
-> - [x] README.md
-> - [x] LICENSE
-> - [x] .gitignore
-> - [x] package.json
-> - [x] Project description
-> - [x] Tech stack list
-> - [x] Features list
-> - [x] Installation commands
-> - [x] Run commands
-> - [x] Screenshots
-> - [x] Demo video link
-> - [x] Architecture diagram
-> - [x] API docs placeholder
-> - [x] Team members
-> - [x] License info
-> - [x] Folders (`src/`, `public/`, `docs/`)
-> - [x] Root redirect to `src/index.html`
-> - [x] Lowercase folder names
-> - [x] No spaces in filenames
-> - [ ] Deploy live link (HTTPS)
-> - [x] Code comments and organization (ongoing)
-> - [x] Meaningful commits (ongoing)
-> - [x] Document AI tools used: `GitHub Copilot` (placeholder)
+## 🧾 Basic Details
+
+### 👥 Team Name  
+CodeCrafters  *(Change if needed)*
+
+### 👤 Team Members  
+- **Harinandana S** – [Your College Name]  
+- **Anugraha Sunny** – [Your College Name]  
+
+### 🌐 Hosted Project Link  
+👉 Add your deployed link here (https://harinandana0671.github.io/rozgar-setu/)
+
+---
+
+## 📌 Project Description
+
+Rozgar Setu is a simple web-based job connection platform designed to help small-scale employers and local workers connect easily. Employers can post job opportunities, and workers can search and explore available listings.
+
+---
+
+## ❗ Problem Statement
+
+Many local workers and small employers lack access to easy-to-use digital platforms for short-term, daily wage, or freelance job opportunities. Existing job portals are often too complex and not localized for small communities.
+
+---
+
+## 💡 The Solution
+
+Rozgar Setu provides:
+
+- A simple job posting interface for employers  
+- Easy job search functionality for workers  
+- Dashboard for managing job listings  
+- Responsive design for mobile users  
+- Lightweight system that works without backend setup  
+
+---
+
+# 🛠 Technical Details
+
+## 💻 Technologies / Components Used
+
+### For Software
+
+- **Languages Used:** HTML5, CSS3, JavaScript  
+- **Frameworks Used:** None (Vanilla JS)  
+- **Libraries Used:** None  
+- **Tools Used:** VS Code, Git, GitHub  
+
+### For Hardware
+Not applicable (Software-only project)
+
+---
+
+# ✨ Features
+
+- 📝 Job Posting Form  
+- 🔍 Search and Filter Jobs  
+- 📊 User Dashboard  
+- 👤 Profile Management  
+- 📱 Fully Responsive Layout  
+- 💾 LocalStorage-based data persistence  
+
+---
+
+# ⚙️ Implementation
+
+## 📥 Installation
+
+```bash
+git clone https://github.com/Harinandana0671/rozgar-setu.git
+cd rozgar-setu
