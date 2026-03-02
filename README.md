@@ -37,9 +37,9 @@ python -m http.server 8000
 ```
 
 ## 📸 Screenshots
-1. ![Home page](Screenshot 2026-03-02 210741.png)
-2. ![Post form](Screenshot 2026-03-02 210813.png)
-3. ![Dashboard](Screenshot 2026-03-02 210832.png)
+1. ![Home page](Screenshot1.png)
+2. ![Post form](Screenshot2.png)
+3. ![Dashboard](Screenshot3.png)
 
 > _(Place three or more actual images in a `screenshots/` folder.)_
 
