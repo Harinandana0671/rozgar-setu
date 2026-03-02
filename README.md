@@ -53,8 +53,8 @@ Diagram showing how HTML, CSS, and JS interact: see `docs/architecture_diagram.p
 _No backend currently. Add details here once APIs are created._
 
 ## 👥 Team Members
-- [Name 1](mailto:email@example.com)
-- [Name 2](mailto:email@example.com)
+- [Harinandana S](harinandana76@gmail.com)
+- [Anugraha Sunny](anugrahasunny2006@gmail.com)
 
 > _(Include real names and contact information before publishing.)_
 
